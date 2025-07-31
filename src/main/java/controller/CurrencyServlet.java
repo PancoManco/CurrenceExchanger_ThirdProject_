@@ -1,5 +1,6 @@
 package controller;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import dto.CurrencyDto;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
@@ -24,10 +25,21 @@ public class CurrencyServlet extends HttpServlet {
     }
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+        CurrencyDto currencyDto = new ObjectMapper().readValue(req.getReader(), CurrencyDto.class);
+        CurrencyDto createdCurrency = currencyService.create(currencyDto);
+        JsonUtil.sendJsonResponse(resp, HttpServletResponse.SC_CREATED, createdCurrency);
+
+        /*
         String name = req.getParameter( "name");
         String code = req.getParameter("code");
         String sign = req.getParameter("sign");
-    CurrencyDto currency = currencyService.create(new CurrencyDto(name,code,sign));
-        JsonUtil.sendJsonResponse(resp,HttpServletResponse.SC_CREATED,currency);
+
+        CurrencyDto currencyDto = new CurrencyDto();
+        currencyDto.setCode(code);
+        currencyDto.setName(name);
+        currencyDto.setSign(sign);
+        CurrencyDto currency = currencyService.create(currencyDto);
+        JsonUtil.sendJsonResponse(resp,HttpServletResponse.SC_CREATED,currency); */
+
     }
 }

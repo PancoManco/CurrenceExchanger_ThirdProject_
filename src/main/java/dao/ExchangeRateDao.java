@@ -47,12 +47,13 @@ public class ExchangeRateDao {
     public Optional<ExchangeRate> save(Currency baseCurrency, Currency targetCurrency, BigDecimal rate) {
         try (var connection = ConnectionManager.get();
              var statement = connection.prepareStatement(SAVE_EXCHANGE_RATE_SQL, Statement.RETURN_GENERATED_KEYS)) {
-            ExchangeRate exchangerate = null;
+            ExchangeRate exchangerate = new ExchangeRate();
             statement.setInt(1, baseCurrency.getId());
             statement.setInt(2, targetCurrency.getId());
             statement.setBigDecimal(3, rate);
-            var keys = statement.getGeneratedKeys();
             statement.executeUpdate();
+            var keys = statement.getGeneratedKeys();
+
             if (keys.next()) {
                 exchangerate.setId(keys.getInt("id"));
             }
@@ -82,7 +83,12 @@ public class ExchangeRateDao {
     public boolean update(String basecurrencycode, String targetcurrencycode, BigDecimal rate) {
         try (var connection = ConnectionManager.get();
              var statement = connection.prepareStatement(UPDATE_EXCHANGE_RATE_SQL)) {
-            ExchangeRate exchangerate = getByPair(basecurrencycode,targetcurrencycode).get();
+          //  ExchangeRate exchangerate = getByPair(basecurrencycode,targetcurrencycode).get();
+            Optional<ExchangeRate> optionalRate = getByPair(basecurrencycode,targetcurrencycode);
+            if (optionalRate.isEmpty()) {
+                throw new DBException("Курс обмена не найден для пары: " + basecurrencycode + " → " + targetcurrencycode);
+            }
+            ExchangeRate exchangerate = optionalRate.get();
             statement.setBigDecimal(1, rate);
             statement.setInt(2, exchangerate.getId());
             exchangerate.setRate(rate);

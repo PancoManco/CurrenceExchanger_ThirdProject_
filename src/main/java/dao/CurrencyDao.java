@@ -38,7 +38,7 @@ public class CurrencyDao {
         if (keys.next()) {
             currency.setId(keys.getInt("id"));
         }
-        return Optional.ofNullable(currency);
+        return Optional.of(currency);
         } catch (SQLException e) {
 
             throw new DBException("Ошибка при сохранении валюты в базу данных: код валюты='" + currency.getCode() + "', имя валюты='" + currency.getName() + "', детальнее: " + e.getMessage());

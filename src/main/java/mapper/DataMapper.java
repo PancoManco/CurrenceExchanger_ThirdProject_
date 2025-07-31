@@ -19,60 +19,67 @@ public final class DataMapper {
                 resultSet.getString("sign"));
     }
 
-    public static ExchangeRate buildExchangeRate(ResultSet resultSet) throws SQLException {
+    public static ExchangeRate buildExchangeRate(ResultSet rs) throws SQLException {
         Currency baseCurrency = new Currency(
-                resultSet.getInt("basecurrencyid"),
-                resultSet.getString("base_currency_code"),
-                resultSet.getString("base_fullname"), // ??
-                resultSet.getString("base_sign")); // ??
+                rs.getInt("basecurrencyid"),
+                rs.getString("base_currency_code"),
+                rs.getString("base_fullname"),
+                rs.getString("base_sign")
+        );
         Currency targetCurrency = new Currency(
-                resultSet.getInt("targetcurrencyid"),
-                resultSet.getString("target_currency_code"),
-                resultSet.getString("target_fullname"), // ??
-                resultSet.getString("target_sign")); // ??
+                rs.getInt("targetcurrencyid"),
+                rs.getString("target_currency_code"),
+                rs.getString("target_fullname"),
+                rs.getString("target_sign")
+        );
+
         return new ExchangeRate(
-                resultSet.getInt("id"),
+                rs.getInt("id"),
                 baseCurrency,
                 targetCurrency,
-                resultSet.getBigDecimal("rate"));
+                rs.getBigDecimal("rate")
+        );
     }
 
-    public static CurrencyDto convertToDto(Currency currency) {
-        if(currency == null){
-            return null;
-        }
-        CurrencyDto dto = new CurrencyDto();
-      //  dto.setId(currency.getId());
-        dto.setCode(currency.getCode());
-        dto.setName(currency.getName());
-        dto.setSign(currency.getSign());
-        return dto;
+    public static CurrencyDto toDto(Currency currency) {
+        if (currency == null) return null;
+        return new CurrencyDto(
+                currency.getId(),
+                currency.getCode(),
+                currency.getName(),
+                currency.getSign()
+        );
     }
 
-    public static Currency convertToCurrency(CurrencyDto dto) {
-        Currency currency = new Currency();
-     //   currency.setId(dto.getId());
-        currency.setCode(dto.getCode());
-        currency.setName(dto.getName());
-        currency.setSign(dto.getSign());
-        return currency;
+    public static Currency toModel(CurrencyDto dto) {
+        if (dto == null) return null;
+        return new Currency(
+                dto.getId(),
+                dto.getCode(),
+                dto.getName(),
+                dto.getSign()
+        );
     }
 
-    public static ExchangeRateDto convertToDto(ExchangeRate exchangeRate) {
-        ExchangeRateDto dto = new ExchangeRateDto();
-        dto.setId(exchangeRate.getId());
-        dto.setBaseCurrency(exchangeRate.getBaseCurrency());
-        dto.setTargetCurrency(exchangeRate.getTargetCurrency());
-        dto.setRate(exchangeRate.getRate());
-        return dto;
+    public static ExchangeRateDto toDto(ExchangeRate exchangeRate) {
+        if (exchangeRate == null) return null;
+
+        return new ExchangeRateDto(
+                exchangeRate.getId(),
+                toDto(exchangeRate.getBaseCurrency()),
+                toDto(exchangeRate.getTargetCurrency()),
+                exchangeRate.getRate()
+        );
     }
 
-    public static ExchangeRate convertToExchangeRate(ExchangeRateDto dto) {
-        ExchangeRate exchangeRate = new ExchangeRate();
-        exchangeRate.setId(dto.getId());
-        exchangeRate.setBaseCurrency(dto.getBaseCurrency());
-        exchangeRate.setTargetCurrency(dto.getTargetCurrency());
-        exchangeRate.setRate(dto.getRate());
-        return exchangeRate;
+    public static ExchangeRate toModel(ExchangeRateDto dto) {
+        if (dto == null) return null;
+
+        return new ExchangeRate(
+                dto.getId(),
+                toModel(dto.getBaseCurrency()),
+                toModel(dto.getTargetCurrency()),
+                dto.getRate()
+        );
     }
 }
