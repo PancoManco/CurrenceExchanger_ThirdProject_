@@ -1,5 +1,6 @@
 package dao;
 
+import exception.DBException;
 import mapper.DataMapper;
 import model.Currency;
 import model.ExchangeRate;
@@ -57,8 +58,7 @@ public class ExchangeRateDao {
             }
             return Optional.ofNullable(exchangerate);
         } catch (SQLException e) {
-            //TODO SC_INTERNAL_ERROR
-            throw new RuntimeException(e);
+            throw new DBException("Ошибка при создании курса обмена валют. Проблемы с доступом к БД! ");
         }
     }
 
@@ -73,8 +73,7 @@ public class ExchangeRateDao {
         }
         return exchangeRates;
         } catch (SQLException e) {
-            // TODO SC_INTERNAL_ERROR
-            throw new RuntimeException(e);
+            throw new DBException("Ошибка при получение списка курса обмена валют.Проблемы с доступом к БД!");
         }
 
     }
@@ -89,8 +88,7 @@ public class ExchangeRateDao {
             exchangerate.setRate(rate);
             return statement.executeUpdate() >0;
         } catch (SQLException e) {
-            // TODO SC_INTERNAL_ERROR
-            throw new RuntimeException(e);
+           throw new DBException("Ошибка при обновление курса обмена валют.Проблемы с доступом к БД!");
         }
 
     }
@@ -108,8 +106,7 @@ public class ExchangeRateDao {
             }
         return Optional.ofNullable(exchangeRate);
         } catch (SQLException e) {
-            //TODO база данных недоступна
-            throw new RuntimeException(e);
+            throw new DBException("Ошибка при получение пары обмена курса валют. Проблемы с доступом к БД!");
         }
     }
 
@@ -119,18 +116,3 @@ public class ExchangeRateDao {
     private ExchangeRateDao() {
     }
 }
-
-
-
-//    private ExchangeRate buildExchangeRate(ResultSet result) throws SQLException {
-//        return new ExchangeRate(result.getInt("id"),
-//                currencyDao.findByCode(result.getString("basecurrencyid")),
-//                currencyDao.findByCode(result.getString("targetcurrencyid")),
-//                result.getBigDecimal("rate")
-//        );
-//    }
-
-//    private final static String GET_ALL_SQL = """
-//            select e.id, e.basecurrencyid, e.targetcurrencyid,e.rate, c.id,c.code,c.fullname,c.sign from currencydatabase.exchangerates e
-//            join currencydatabase.currencies c on e.basecurrencyid = c.id
-//            """;

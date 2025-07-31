@@ -41,7 +41,7 @@ public class CurrencyDao {
         return Optional.ofNullable(currency);
         } catch (SQLException e) {
 
-            throw new DBException("Some");
+            throw new DBException("Ошибка при сохранении валюты в базу данных: код валюты='" + currency.getCode() + "', имя валюты='" + currency.getName() + "', детальнее: " + e.getMessage());
         }
     }
 
@@ -57,8 +57,7 @@ public class CurrencyDao {
             }
             return currencies;
         } catch (SQLException e) {
-            // TODO    SC_INTERNAL_ERROR
-            throw new DaoException(e);
+            throw new DBException("Ошибка получения списка валют из базы данных: запрос SQL=" + GET_ALL_SQL + ", детализация: " + e.getMessage());
         }
 
     }
@@ -77,7 +76,7 @@ public class CurrencyDao {
             return Optional.ofNullable(currency);
         } catch (SQLException e) {
 
-            throw new RuntimeException(e);
+            throw new DBException("Ошибка при поиске валюты по коду: " + code + ". Детали: " + e.getMessage());
         }
     }
 
