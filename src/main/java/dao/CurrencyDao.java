@@ -1,5 +1,6 @@
 package dao;
 
+import exception.DBException;
 import exception.DaoException;
 import mapper.DataMapper;
 import model.Currency;
@@ -25,7 +26,7 @@ public class CurrencyDao {
             where code = ?
             """;
 
-    public Optional<Currency> create(Currency currency) {
+    public Optional<Currency> save(Currency currency) {
         try (var connection = ConnectionManager.get();
              var statement = connection.prepareStatement(SAVE_SQL, Statement.RETURN_GENERATED_KEYS);
         ) {
@@ -39,8 +40,8 @@ public class CurrencyDao {
         }
         return Optional.ofNullable(currency);
         } catch (SQLException e) {
-            //  TODO EXCETOPTION SC_INTERNAL_SERVER_EROOR currency not save. something happpened with database or server
-            throw new RuntimeException(e);
+
+            throw new DBException("Some");
         }
     }
 
@@ -75,7 +76,7 @@ public class CurrencyDao {
             }
             return Optional.ofNullable(currency);
         } catch (SQLException e) {
-            // TODO DB EXCEPTION SC _ INTERNAL_ ERROR
+
             throw new RuntimeException(e);
         }
     }

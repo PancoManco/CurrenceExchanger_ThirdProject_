@@ -43,7 +43,7 @@ public class ExchangeRateDao {
 
 
 
-    public Optional<ExchangeRate> createRate(Currency baseCurrency, Currency targetCurrency, BigDecimal rate) {
+    public Optional<ExchangeRate> save(Currency baseCurrency, Currency targetCurrency, BigDecimal rate) {
         try (var connection = ConnectionManager.get();
              var statement = connection.prepareStatement(SAVE_EXCHANGE_RATE_SQL, Statement.RETURN_GENERATED_KEYS)) {
             ExchangeRate exchangerate = null;

@@ -5,7 +5,6 @@ import dto.CurrencyDto;
 import mapper.DataMapper;
 import model.Currency;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.NoSuchElementException;
 import java.util.stream.Collectors;
@@ -24,7 +23,7 @@ public class CurrencyService {
     }
 
     public CurrencyDto create(CurrencyDto currencyDto) {
-        Currency createdCurrency = dao.create(DataMapper.convertToCurrency(currencyDto)).get();  // Создаем новый объект валюты
+        Currency createdCurrency = dao.save(DataMapper.convertToCurrency(currencyDto)).get();  // Создаем новый объект валюты
         return DataMapper.convertToDto(createdCurrency);
     }
 }
